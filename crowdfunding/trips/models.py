@@ -14,3 +14,14 @@ class Trip(models.Model):
     duration = models.IntegerField()
     start_date = models.DateTimeField()
 
+class Pledge(models.Model):
+    amount = models.IntegerField()
+    comment = models.CharField(max_length=200)
+    anonymous = models.BooleanField()
+    trip = models.ForeignKey(
+        'Trip',
+        on_delete=models.CASCADE,
+        related_name='pledges'
+    )
+    trip_mate = models.CharField(max_length=200)
+

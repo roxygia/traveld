@@ -2,11 +2,11 @@ from django.http import Http404
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Trip
-from .serializers import TripSerializer
+from .models import Trip, Pledge
+from .serializers import TripSerializer, PledgeSerializer, TripDetailSerializer
 
 class TripList(APIView):
-
+    
     def get(self, request):
         trips = Trip.objects.all()
         serializer = TripSerializer(trips, many=True)
@@ -35,10 +35,40 @@ class TripDetail(APIView):
     
     def get(self, request, pk):
         trip = self.get_object(pk)
-        serializer = TripSerializer(trip)
-        return REsponse(serializer.data)
+        serializer = TripDetailSerializer(trip)
+        return Response(serializer.data)
 
-
+class PledgeList(APIView):
     
+    def get(self, request):
+        pledges = Pledge.objects.all()
+        serializer = PledgeSerializer(pledges, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = PledgeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+class PledgeDetail(APIView):
+    
+    def get_object(self, pk):
+        try:
+            return Pledge.objects.get(pk=pk)
+        except Pledge.DoesNotExist:
+            raise Http404
+    
+    def get(self, request, pk):
+        trip = self.get_object(pk)
+        serializer = PledgeSerializer(trip)
+        return Response(serializer.data)
 
 
