@@ -32,6 +32,11 @@ class TripDetail(APIView):
             return Trip.objects.get(pk=pk)
         except Trip.DoesNotExist:
             raise Http404
+    
+    def get(self, request, pk):
+        trip = self.get_object(pk)
+        serializer = TripSerializer(trip)
+        return REsponse(serializer.data)
 
 
     
