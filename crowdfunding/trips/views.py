@@ -15,7 +15,7 @@ class TripList(APIView):
     def post(self, request):
         serializer = TripSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(organiser=request.user)
             return Response(
                 serializer.data,
                 status=status.HTTP_201_CREATED

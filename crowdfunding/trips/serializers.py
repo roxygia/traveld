@@ -20,7 +20,7 @@ class TripSerializer(serializers.Serializer):
     image = serializers.URLField()
     is_open = serializers.BooleanField()
     date_created = serializers.DateTimeField()
-    organiser = serializers.CharField(max_length=200)
+    organiser = serializers.ReadOnlyField(source='organiser.id')
     cost = serializers.IntegerField()
     duration = serializers.IntegerField()
     start_date = serializers.DateTimeField()
