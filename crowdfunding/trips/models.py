@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 # Create your models here.
@@ -9,7 +10,11 @@ class Trip(models.Model):
     image = models.URLField()
     is_open = models.BooleanField()
     date_created = models.DateTimeField()
-    organiser = models.CharField(max_length=200)
+    organiser = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE,
+        related_name='organiser_trips'
+    )
     cost = models.IntegerField()
     duration = models.IntegerField()
     start_date = models.DateTimeField()
@@ -23,5 +28,9 @@ class Pledge(models.Model):
         on_delete=models.CASCADE,
         related_name='pledges'
     )
-    trip_mate = models.CharField(max_length=200)
+    trip_mate = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE,
+        related_name='trip_mate_pledges'
+    )
 
