@@ -1,9 +1,10 @@
 from django.http import Http404
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Trip, Pledge
 from .serializers import TripSerializer, PledgeSerializer, TripDetailSerializer
+from .permissions import IsOwnerOrReadOnly
 
 class TripList(APIView):
     
@@ -26,6 +27,10 @@ class TripList(APIView):
         )
 
 class TripDetail(APIView):
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
+        IsOwnerOrReadOnly
+        ]
 
     def get_object(self, pk):
         try:
@@ -37,6 +42,18 @@ class TripDetail(APIView):
         trip = self.get_object(pk)
         serializer = TripDetailSerializer(trip)
         return Response(serializer.data)
+
+    def put(self, request, pk):
+        trip = self.get_object(pk)
+        data = request.data
+        serializer = TripDetailSerializer(
+            instance=trip,
+            data=data,
+            partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+
 
 class PledgeList(APIView):
     

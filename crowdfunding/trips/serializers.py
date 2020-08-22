@@ -31,6 +31,21 @@ class TripSerializer(serializers.Serializer):
 class TripDetailSerializer(TripSerializer):
     pledges = PledgeSerializer(many=True, read_only=True)
 
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('title', instance.title)
+        instance.itinerary = validated_data.get('itinerary', instance.itinerary)
+        instance.goal = validated_data.get('goal', instance.goal)
+        instance.image = validated_data.get('image', instance.image)
+        instance.is_open = validated_data.get('is_open', instance.is_open)
+        instance.date_created = validated_data.get('date_created', instance.date_created)
+        instance.organiser = validated_data.get('organiser', instance.organiser)
+        instance.start_date = validated_data.get('start_date', instance.start_date)
+        instance.cost = validated_data.get('cost', instance.cost)
+        instance.duration = validated_data.get('duration', instance.duration)
+        instance.save()
+        return instance
+
+
 
 
     
