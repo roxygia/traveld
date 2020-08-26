@@ -6,7 +6,7 @@ class PledgeSerializer(serializers.Serializer):
     amount = serializers.IntegerField()
     comment = serializers.CharField(max_length=200)
     anonymous = serializers.BooleanField()
-    trip_mate = serializers.CharField(max_length=200)
+    trip_mate = serializers.ReadOnlyField(source='trip_mate.id')
     trip_id = serializers.IntegerField()
 
     def create(self, validated_data):

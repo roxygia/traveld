@@ -62,6 +62,25 @@ class TripDetail(APIView):
             status=status.HTTP_400_BAD_REQUEST
         )
 
+    def delete(self, request, pk):
+        trip = self.get_object(pk)
+        data = request.data
+        serializer = TripDetailSerializer(
+            instance=trip,
+            data=data,
+            partial=True
+        )
+        if serializer.is_valid():
+            serializer.save(organiser=request.user)
+            return Response(
+                serializer.data,
+                status=status.HTTP_200_OK
+            )
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
 
 class PledgeList(APIView):
     
@@ -73,7 +92,7 @@ class PledgeList(APIView):
     def post(self, request):
         serializer = PledgeSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(trip_mate=request.user)
             return Response(
                 serializer.data,
                 status=status.HTTP_201_CREATED

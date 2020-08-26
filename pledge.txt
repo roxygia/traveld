@@ -1,0 +1,7 @@
+{
+    "id": 3,
+    "amount": 1,
+    "comment": "Hello!",
+    "anonymous": false,
+    "trip_id": 1
+}
