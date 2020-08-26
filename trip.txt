@@ -1,0 +1,12 @@
+{
+"title": "A trip",
+"itinerary": "The first trip",
+"goal": 6,
+"image": "https://via.placeholder.com/300.jpg",
+"is_open": true,
+"date_created": "2020-03-20T14:28:23.382748Z",
+"cost": 500,
+"duration": 7,
+"start_date": "2020-06-20T14:28:23.382748Z",
+
+}

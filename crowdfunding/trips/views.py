@@ -52,7 +52,15 @@ class TripDetail(APIView):
             partial=True
         )
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(organiser=request.user)
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 class PledgeList(APIView):
