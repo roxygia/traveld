@@ -1,9 +1,10 @@
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
 from .models import CustomUser
 from .serializers import CustomUserSerializer
+from .permissions import IsUserOrReadOnly
 
 class CustomUserList(APIView):
     def get(self, request):
@@ -19,6 +20,10 @@ class CustomUserList(APIView):
 
 
 class CustomUserDetail(APIView):
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
+        IsUserOrReadOnly
+        ]
     def get_object(self, pk):
           try:
                return CustomUser.objects.get(pk=pk)
@@ -28,3 +33,10 @@ class CustomUserDetail(APIView):
         user = self.get_object(pk)
         serializer = CustomUserSerializer(user)
         return Response(serializer.data)
+    
+    def delete(self, request, pk):
+        user = self.get_object(pk)
+        self.check_object_permissions(request, user)
+
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
