@@ -3,7 +3,7 @@ from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Trip, Pledge
-from .serializers import TripSerializer, PledgeSerializer, TripDetailSerializer
+from .serializers import TripSerializer, PledgeSerializer, TripDetailSerializer, PledgeDetailSerializer
 from .permissions import IsOwnerOrReadOnly
 
 class TripList(APIView):
@@ -45,6 +45,7 @@ class TripDetail(APIView):
 
     def put(self, request, pk):
         trip = self.get_object(pk)
+        self.check_object_permissions(request, trip)
         data = request.data
         serializer = TripDetailSerializer(
             instance=trip,
@@ -52,7 +53,7 @@ class TripDetail(APIView):
             partial=True
         )
         if serializer.is_valid():
-            serializer.save(organiser=request.user)
+            serializer.save()
             return Response(
                 serializer.data,
                 status=status.HTTP_201_CREATED
@@ -64,22 +65,10 @@ class TripDetail(APIView):
 
     def delete(self, request, pk):
         trip = self.get_object(pk)
-        data = request.data
-        serializer = TripDetailSerializer(
-            instance=trip,
-            data=data,
-            partial=True
-        )
-        if serializer.is_valid():
-            serializer.save(organiser=request.user)
-            return Response(
-                serializer.data,
-                status=status.HTTP_200_OK
-            )
-        return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        self.check_object_permissions(request, trip)
+
+        trip.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PledgeList(APIView):
@@ -111,8 +100,15 @@ class PledgeDetail(APIView):
             raise Http404
     
     def get(self, request, pk):
-        trip = self.get_object(pk)
-        serializer = PledgeSerializer(trip)
+        pledge = self.get_object(pk)
+        serializer = PledgeDetailSerializer(pledge)
         return Response(serializer.data)
+
+    def delete(self, request, pk):
+        pledge = self.get_object(pk)
+        self.check_object_permissions(request, pledge)
+
+        pledge.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 

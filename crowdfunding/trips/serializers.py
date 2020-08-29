@@ -45,6 +45,16 @@ class TripDetailSerializer(TripSerializer):
         instance.save()
         return instance
 
+class PledgeDetailSerializer(PledgeSerializer):
+
+    def update(self, instance, validated_data):
+        instance.amount = validated_data.get('amount', instance.amount)
+        instance.comment = validated_data.get('comment', instance.comment)
+        instance.anonymous = validated_data.get('anonymous', instance.anonymous)
+        instance.trip_id = validated_data.get('image', instance.trip_id)
+        instance.trip_mate = validated_data.get('trip_mate', instance.trip_mate)
+        instance.save()
+        return instance
 
 
 
