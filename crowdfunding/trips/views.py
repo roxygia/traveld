@@ -28,7 +28,7 @@ class TripList(APIView):
 
 class TripDetail(APIView):
     permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
+        # permissions.IsAuthenticatedOrReadOnly,
         IsOwnerOrReadOnly
         ]
 
