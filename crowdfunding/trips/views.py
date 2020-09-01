@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Trip, Pledge
 from .serializers import TripSerializer, PledgeSerializer, TripDetailSerializer, PledgeDetailSerializer
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, IsTripMateOrReadOnly
 
 class TripList(APIView):
     
@@ -28,7 +28,7 @@ class TripList(APIView):
 
 class TripDetail(APIView):
     permission_classes = [
-        # permissions.IsAuthenticatedOrReadOnly,
+        permissions.IsAuthenticatedOrReadOnly,
         IsOwnerOrReadOnly
         ]
 
@@ -92,6 +92,10 @@ class PledgeList(APIView):
         )
     
 class PledgeDetail(APIView):
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
+        IsTripMateOrReadOnly
+        ]
     
     def get_object(self, pk):
         try:

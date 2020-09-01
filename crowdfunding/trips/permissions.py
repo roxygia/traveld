@@ -6,10 +6,14 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return obj.organiser == request.user
-        # {
-        #     obj.organiser == request.user
-            #or request.user.is_superuser
-        # }
+
+class IsTripMateOrReadOnly(permissions.BasePermission):
+    
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return obj.trip_mate == request.user
+   
 
     # def has_object_permission(self, request, view, obj):
     #     if request.method in permissions.SAFE_METHODS:
@@ -17,4 +21,4 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
     #     if obj.organiser == request.user:
     #         return True
     #     return False
-
+    #or request.user.is_superuse
